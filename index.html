@@ -211,7 +211,7 @@
             const timestamp = now.toISOString();
             localStorage.setItem(`wakeUpTime_${fullDate}`, timestamp); // 날짜별로 저장
             document.getElementById('wake-up-time').innerText = '기상 시간: ' + now.toLocaleString();
-            renderCalendar();
+            renderCalendar(); // 달력 업데이트
         });
 
         // 페이지 로드 시 저장된 기상 시간 표시
@@ -280,32 +280,32 @@
             }
         });
 
-        // 별점 등록 버튼 클릭 시 localStorage에 저장
-        document.querySelector('.submit-rating').addEventListener('click', function() {
-            const goalItems = document.querySelectorAll('.goal-item');
-            const ratings = {};
-            goalItems.forEach(item => {
-                const goalText = item.querySelector('span').innerText;
-                const selectedStars = item.querySelectorAll('.star.selected');
-                const rating = selectedStars.length || 0; // 별점이 없으면 0으로 설정
-                ratings[goalText] = rating; // 0점도 등록
-                // 선택된 별을 초기화
-                item.querySelectorAll('.star').forEach(star => star.classList.remove('selected'));
-            });
-            if (Object.keys(ratings).length > 0) {
-                const today = new Date().toISOString().split('T')[0]; // 현재 날짜
-                const storedRatings = JSON.parse(localStorage.getItem('ratings')) || {};
-                if (!storedRatings[today]) {
-                    storedRatings[today] = {};
-                }
-                Object.assign(storedRatings[today], ratings); // 기존 데이터 덮어쓰기
-                localStorage.setItem('ratings', JSON.stringify(storedRatings));
-                alert('별점이 등록되었습니다!');
-                renderCalendar();
-            } else {
-                alert('등록할 별점이 없습니다.');
-            }
+    // 별점 등록 버튼 클릭 시 localStorage에 저장
+    document.querySelector('.submit-rating').addEventListener('click', function() {
+        const goalItems = document.querySelectorAll('.goal-item');
+        const ratings = {};
+        goalItems.forEach(item => {
+            const goalText = item.querySelector('span').innerText;
+            const selectedStars = item.querySelectorAll('.star.selected');
+            const rating = selectedStars.length || 0; // 별점이 없으면 0으로 설정
+            ratings[goalText] = rating; // 0점도 등록
+            // 선택된 별을 초기화
+            item.querySelectorAll('.star').forEach(star => star.classList.remove('selected'));
         });
+        if (Object.keys(ratings).length > 0) {
+            const today = new Date().toISOString().split('T')[0]; // 현재 날짜
+            const storedRatings = JSON.parse(localStorage.getItem('ratings')) || {};
+            if (!storedRatings[today]) {
+                storedRatings[today] = {};
+            }
+            Object.assign(storedRatings[today], ratings); // 기존 데이터 덮어쓰기
+            localStorage.setItem('ratings', JSON.stringify(storedRatings));
+            alert('별점이 등록되었습니다!');
+            renderCalendar(); // 달력 업데이트
+        } else {
+            alert('등록할 별점이 없습니다.');
+        }
+    });
 
         // 초기화 버튼 클릭 시 localStorage 초기화
         document.getElementById('reset-btn').addEventListener('click', function() {
